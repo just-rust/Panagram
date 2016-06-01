@@ -62,6 +62,7 @@ class ConsoleIO {
     }
     
     func getInput() -> String {
+        /*
         //1
         let keyboard = NSFileHandle.fileHandleWithStandardInput()
         
@@ -73,6 +74,9 @@ class ConsoleIO {
         
         //4
         return strData.stringByTrimmingCharactersInSet(NSCharacterSet.newlineCharacterSet())
+        */
+        
+        return readLine()!
         
     }
 }
