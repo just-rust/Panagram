@@ -7,11 +7,16 @@
 //
 
 import Foundation
+enum OutputType {
+    case Error
+    case Standard
+}
 
 enum OptionType: String {
     case Palindrome = "p"
     case Anagram = "a"
     case Help = "h"
+    case Quit = "q"
     case Unknown
     
     init(value: String) {
@@ -22,11 +27,14 @@ enum OptionType: String {
             self = .Palindrome
         case "h":
             self = .Help
+        case "q":
+            self = .Quit
         default:
             self = .Unknown
         }
     }
 }
+
 class ConsoleIO {
     class func printUsage(){
         let executableName = (Process.arguments[0] as NSString).lastPathComponent
@@ -43,5 +51,28 @@ class ConsoleIO {
     
     func getOption(option: String) -> (option: OptionType, value: String) {
         return (OptionType(value: option), option)
+    }
+    func writeMessage(message: String, to: OutputType = .Standard) {
+        switch to {
+        case .Standard:
+            print("\u{001B}[;m\(message)")
+        case .Error:
+            fputs("\u{001B}[0;31m\(message)\n", stderr)
+        }
+    }
+    
+    func getInput() -> String {
+        //1
+        let keyboard = NSFileHandle.fileHandleWithStandardInput()
+        
+        //2
+        let inputData = keyboard.availableData
+        
+        //3
+        let strData = NSString(data: inputData, encoding: NSUTF8StringEncoding)!
+        
+        //4
+        return strData.stringByTrimmingCharactersInSet(NSCharacterSet.newlineCharacterSet())
+        
     }
 }

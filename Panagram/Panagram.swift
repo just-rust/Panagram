@@ -24,9 +24,9 @@ class Panagram {
             //2
             if argCount != 4 {
                 if argCount > 4 {
-                    print("Too many arguments for option \(option.rawValue)")
+                    consoleIO.writeMessage("Too many arguments for option \(option.rawValue)", to: .Error)
                 } else {
-                    print("Too few arguments for option \(option.rawValue)")
+                    consoleIO.writeMessage("Too few arguments for option \(option.rawValue)", to: .Error)
                 }
                 ConsoleIO.printUsage()
             } else {
@@ -35,33 +35,72 @@ class Panagram {
                 let second = Process.arguments[3]
                 
                 if first.isAnagramOfString(second) {
-                    print("\(second) is an anagram of \(first)")
+                    consoleIO.writeMessage("\(second) is an anagram of \(first)")
                 } else {
-                    print("\(second) is not an anagram of \(first)")
+                    consoleIO.writeMessage("\(second) is not an anagram of \(first)")
                 }
             }
         case .Palindrome:
             //4
             if argCount != 3 {
                 if argCount > 3 {
-                    print("Too many arguments for option \(option.rawValue)")
+                    consoleIO.writeMessage("Too many arguments for option \(option.rawValue)", to: .Error)
                 } else {
-                    print("Too few arguments for option \(option.rawValue)")
+                    consoleIO.writeMessage("Too few arguments for option \(option.rawValue)", to: .Error)
                 }
                 ConsoleIO.printUsage()
             } else {
                 //5
                 let s = Process.arguments[2]
                 let isPalindrome = s.isPalindrome()
-                print("\(s) is \(isPalindrome ? "" : "not ")a palindrome")
+                consoleIO.writeMessage("\(s) is \(isPalindrome ? "" : "not ")a palindrome")
             }
         //6
         case .Help:
             ConsoleIO.printUsage()
-        case .Unknown:
+        case .Unknown, .Quit:
             //7
-            print("Uknown option \(value)")
+            consoleIO.writeMessage("Unknown option \(value)", to: .Error)
             ConsoleIO.printUsage()
+        }
+    }
+    
+    func interactiveMode() {
+        //1
+        consoleIO.writeMessage("Welcome to Pangram. This program checks if an input string is an anagram or panlindrome.")
+        
+        //2
+        var shouldQuit = false
+        while !shouldQuit {
+            //3
+            consoleIO.writeMessage("Type 'a' to check for anagrams or 'p' for palindromes type 'q' to quit.")
+            let (option, value) = consoleIO.getOption(consoleIO.getInput())
+            
+            switch option {
+            case .Anagram:
+                //4
+                consoleIO.writeMessage("Type the first string:")
+                let first = consoleIO.getInput()
+                consoleIO.writeMessage("Type the second string:")
+                let second = consoleIO.getInput()
+                
+                //5
+                if first.isAnagramOfString(second) {
+                    consoleIO.writeMessage("\(second) is an anagram of \(first)")
+                } else {
+                    consoleIO.writeMessage("\(second) is not an anagram of \(first)")
+                }
+            case .Palindrome:
+                consoleIO.writeMessage("Type a word or sentence:")
+                let s = consoleIO.getInput()
+                let isPalindrome = s.isPalindrome()
+                consoleIO.writeMessage("\(s) is \(isPalindrome ? "" : "not ")a palindrome")
+            case .Quit:
+                shouldQuit = true
+            default:
+                //6
+                consoleIO.writeMessage("Uknow option \(value)", to: .Error)
+            }
         }
     }
 }
